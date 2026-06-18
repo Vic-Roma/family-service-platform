@@ -58,11 +58,4 @@ public class MemberController {
     public Member updateMember(@PathVariable Long id, @RequestBody Member member){
         return memberService.updateMember(id, member);
     }
-
-
-
-
-
-
-
 }
