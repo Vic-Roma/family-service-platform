@@ -1,8 +1,7 @@
 package com.victorhugo.familyservicemanager.service;
 
 
-import com.victorhugo.familyservicemanager.dto.PatchTaskDTO;
-import com.victorhugo.familyservicemanager.dto.TaskDTO;
+import com.victorhugo.familyservicemanager.dto.*;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.model.User;
 import com.victorhugo.familyservicemanager.repository.TaskRepository;
@@ -40,6 +39,23 @@ public class TaskService {
         }
 
         return taskDTOS;
+    }
+
+    //Get a task with details
+    public TaskDetailsDTO getTaskDetails(Long id){
+        Task existingTask = taskRepository.findById(id).orElseThrow();
+
+        TaskDetailsDTO taskDetailsDTO = new TaskDetailsDTO();
+
+        taskDetailsDTO.setId(existingTask.getId());
+        taskDetailsDTO.setDescription(existingTask.getDescription());
+
+        if(existingTask.getUser() != null){
+            //Convert user to UserSummaryDTO
+            taskDetailsDTO.setUserSummaryDTO(toUserSummaryDTO(existingTask.getUser())
+            );
+        }
+        return taskDetailsDTO;
     }
 
     //Create a new task
@@ -88,5 +104,13 @@ public class TaskService {
 
 
         return taskDTO;
+    }
+
+    private UserSummaryDTO toUserSummaryDTO(User user){
+        return new UserSummaryDTO(
+                user.getId(),
+                user.getName()
+        );
+
     }
 }

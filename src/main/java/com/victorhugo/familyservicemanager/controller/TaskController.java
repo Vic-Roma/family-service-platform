@@ -1,7 +1,6 @@
 package com.victorhugo.familyservicemanager.controller;
 
-import com.victorhugo.familyservicemanager.dto.PatchTaskDTO;
-import com.victorhugo.familyservicemanager.dto.TaskDTO;
+import com.victorhugo.familyservicemanager.dto.*;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,17 @@ public class TaskController {
     }
 
     //endpoints
+
+    //Get all tasks
     @GetMapping
     public List<TaskDTO> getAllTasks(){
         return taskService.getAllTasks();
+    }
+
+    //Get a task with details
+    @GetMapping("/{id}")
+    public TaskDetailsDTO getTaskDetails(@PathVariable Long id){
+        return taskService.getTaskDetails(id);
     }
 
     //Create a single task
