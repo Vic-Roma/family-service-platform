@@ -1,5 +1,7 @@
 package com.victorhugo.familyservicemanager.controller;
 
+import com.victorhugo.familyservicemanager.dto.PatchTaskDTO;
+import com.victorhugo.familyservicemanager.dto.TaskDTO;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ public class TaskController {
 
     //endpoints
     @GetMapping
-    public List<Task> getAllTasks(){
+    public List<TaskDTO> getAllTasks(){
         return taskService.getAllTasks();
     }
 
@@ -46,5 +48,10 @@ public class TaskController {
         taskService.deleteTaks(id);
     }
 
+    //patch task
+    @PatchMapping("/{id}")
+    public TaskDTO patchTask(@PathVariable Long id, @RequestBody PatchTaskDTO dto) {
+        return taskService.patchTask(id, dto);
+    }
 
 }

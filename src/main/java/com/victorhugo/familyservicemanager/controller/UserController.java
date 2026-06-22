@@ -1,5 +1,7 @@
 package com.victorhugo.familyservicemanager.controller;
 
+import com.victorhugo.familyservicemanager.dto.UserDTO;
+import com.victorhugo.familyservicemanager.dto.UserDetailsDTO;
 import com.victorhugo.familyservicemanager.model.User;
 import com.victorhugo.familyservicemanager.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +35,16 @@ public class UserController {
 
     //Get all users
     @GetMapping
-    public List<User> getAllUsers(){
+    public List<UserDTO> getAllUsers(){
         return userService.getAllUsers();
     }
+
+    //Get user Details
+    @GetMapping("/{id}")
+    public UserDetailsDTO getUserDetails(@PathVariable Long id){
+        return userService.getUserDetails(id);
+    }
+
 
     //Modify all from user
     @PutMapping("/{id}")
