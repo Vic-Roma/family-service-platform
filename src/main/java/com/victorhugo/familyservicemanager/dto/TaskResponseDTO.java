@@ -4,16 +4,16 @@ package com.victorhugo.familyservicemanager.dto;
 //Este Dto se usara para regregar unicamente id, description y user_id, no el user completo,
 // de esta forma el json regresado sera mas plano y menos complejo
 
-public class TaskDTO {
+public class TaskResponseDTO {
 
     //fields
     private Long id;
     private String description;
     private Long userId;
 
-    public TaskDTO(){}
+    public TaskResponseDTO(){}
 
-    public TaskDTO(Long id, String description, Long userId){
+    public TaskResponseDTO(Long id, String description, Long userId){
         this.id = id;
         this.description = description;
         this.userId = userId;

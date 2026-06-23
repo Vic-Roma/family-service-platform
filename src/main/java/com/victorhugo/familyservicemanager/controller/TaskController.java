@@ -22,7 +22,7 @@ public class TaskController {
 
     //Get all tasks
     @GetMapping
-    public List<TaskDTO> getAllTasks(){
+    public List<TaskResponseDTO> getAllTasks(){
         return taskService.getAllTasks();
     }
 
@@ -34,8 +34,8 @@ public class TaskController {
 
     //Create a single task
     @PostMapping
-    public Task createTask(@RequestBody Task task){
-        return taskService.createTask(task);
+    public TaskResponseDTO createTask(@RequestBody TaskRequestDTO taskRequestDTO){
+        return taskService.createTask(taskRequestDTO);
     }
 
     //Create a bunch of tasks
@@ -57,7 +57,7 @@ public class TaskController {
 
     //patch task
     @PatchMapping("/{id}")
-    public TaskDTO patchTask(@PathVariable Long id, @RequestBody PatchTaskDTO dto) {
+    public TaskResponseDTO patchTask(@PathVariable Long id, @RequestBody PatchTaskDTO dto) {
         return taskService.patchTask(id, dto);
     }
 

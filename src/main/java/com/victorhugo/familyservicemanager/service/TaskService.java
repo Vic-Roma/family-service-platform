@@ -27,18 +27,18 @@ public class TaskService {
     //methods
 
     //get all tasks
-    public List<TaskDTO> getAllTasks(){
-        List<TaskDTO> taskDTOS = new ArrayList<>();
+    public List<TaskResponseDTO> getAllTasks(){
+        List<TaskResponseDTO> taskResponseDTOS = new ArrayList<>();
         List<Task> tasks = taskRepository.findAll();
         for(Task t : tasks){
-            taskDTOS.add(new TaskDTO(
+            taskResponseDTOS.add(new TaskResponseDTO(
                     t.getId(),
                     t.getDescription(),
                     t.getUser() != null ? t.getUser().getId() : null
             ));
         }
 
-        return taskDTOS;
+        return taskResponseDTOS;
     }
 
     //Get a task with details
@@ -59,8 +59,21 @@ public class TaskService {
     }
 
     //Create a new task
-    public Task createTask(Task task){
-        return taskRepository.save(task);
+    public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO){
+
+        Task newTask = new Task();
+        //if it has userId first checks if it exists
+        if(taskRequestDTO.getUserId() != null) {
+            User existingUser = userRepository
+                    .findById(taskRequestDTO.getUserId())
+                    .orElseThrow();
+            newTask.setUser(existingUser);
+        }
+
+        newTask.setDescription(taskRequestDTO.getDescription());
+        taskRepository.save(newTask);
+
+        return toTaskResponseDTO(newTask);
     }
 
     //Create a bunch of tasks
@@ -82,7 +95,7 @@ public class TaskService {
     }
 
     //patch task to user con dTO
-    public TaskDTO patchTask(Long id, PatchTaskDTO dto){
+    public TaskResponseDTO patchTask(Long id, PatchTaskDTO dto){
         Task existingTask = taskRepository.findById(id).orElseThrow();
 
         if (dto.getDescription() != null) {
@@ -96,20 +109,22 @@ public class TaskService {
         taskRepository.save(existingTask);
 
         //Conversion a DTOTask to Task
-        TaskDTO taskDTO = new TaskDTO(
-                existingTask.getId(),
-                existingTask.getDescription(),
-                existingTask.getUser() != null ? existingTask.getUser().getId() : null
-        );
-
-
-        return taskDTO;
+        return toTaskResponseDTO(existingTask);
     }
 
     private UserSummaryDTO toUserSummaryDTO(User user){
         return new UserSummaryDTO(
                 user.getId(),
                 user.getName()
+        );
+
+    }
+
+    private TaskResponseDTO toTaskResponseDTO(Task existingTask){
+        return new TaskResponseDTO(
+                existingTask.getId(),
+                existingTask.getDescription(),
+                existingTask.getUser() != null ? existingTask.getUser().getId() : null
         );
 
     }
