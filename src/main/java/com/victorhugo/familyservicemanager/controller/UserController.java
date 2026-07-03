@@ -1,9 +1,10 @@
 package com.victorhugo.familyservicemanager.controller;
 
-import com.victorhugo.familyservicemanager.dto.UserDTO;
 import com.victorhugo.familyservicemanager.dto.UserDetailsDTO;
-import com.victorhugo.familyservicemanager.model.User;
+import com.victorhugo.familyservicemanager.dto.UserRequestDTO;
+import com.victorhugo.familyservicemanager.dto.UserResponseDTO;
 import com.victorhugo.familyservicemanager.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,19 +24,19 @@ public class UserController {
 
     //Create a user
     @PostMapping
-    public User createUser(@RequestBody User user){
+    public UserResponseDTO createUser(@RequestBody @Valid UserRequestDTO user){
         return userService.createUser(user);
     }
 
     //Create a bunch of users
     @PostMapping("/batch")
-    public List<User> createUsers(@RequestBody List<User> users){
-        return userService.createUsers(users);
+    public List<UserResponseDTO> createUsers(@RequestBody @Valid List<UserRequestDTO> requests){
+        return userService.createUsers(requests);
     }
 
     //Get all users
     @GetMapping
-    public List<UserDTO> getAllUsers(){
+    public List<UserResponseDTO> getAllUsers(){
         return userService.getAllUsers();
     }
 
@@ -48,8 +49,8 @@ public class UserController {
 
     //Modify all from user
     @PutMapping("/{id}")
-    public User putUser(@RequestBody User user, @PathVariable Long id){
-        return userService.putUser(user,id);
+    public UserDetailsDTO putUser(@Valid @RequestBody UserRequestDTO dto, @PathVariable Long id){
+        return userService.putUser(dto,id);
     }
 
     //Delete user

@@ -3,10 +3,14 @@ package com.victorhugo.familyservicemanager.controller;
 import com.victorhugo.familyservicemanager.dto.*;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.service.TaskService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -28,13 +32,17 @@ public class TaskController {
 
     //Get a task with details
     @GetMapping("/{id}")
-    public TaskDetailsDTO getTaskDetails(@PathVariable Long id){
+    public TaskDetailsDTO getTaskDetails(
+            @Positive(message = "Id must be positive")
+            @PathVariable Long id){
         return taskService.getTaskDetails(id);
     }
 
     //Create a single task
     @PostMapping
-    public TaskResponseDTO createTask(@RequestBody TaskRequestDTO taskRequestDTO){
+    public TaskResponseDTO createTask(
+            @Valid
+            @RequestBody TaskRequestDTO taskRequestDTO){
         return taskService.createTask(taskRequestDTO);
     }
 

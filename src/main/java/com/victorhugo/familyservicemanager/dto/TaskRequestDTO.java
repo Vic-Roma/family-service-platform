@@ -1,8 +1,14 @@
 package com.victorhugo.familyservicemanager.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class TaskRequestDTO {
 
     //fields
+
+    @NotBlank(message = "no puede ir vacio")
+    @Size(max = 100,message = "no puedes exeder mas de 100 caracteres")
     private String description;
     private Long userId;
 

@@ -1,7 +1,8 @@
 package com.victorhugo.familyservicemanager.service;
 
 import com.victorhugo.familyservicemanager.dto.TaskSummaryDTO;
-import com.victorhugo.familyservicemanager.dto.UserDTO;
+import com.victorhugo.familyservicemanager.dto.UserRequestDTO;
+import com.victorhugo.familyservicemanager.dto.UserResponseDTO;
 import com.victorhugo.familyservicemanager.dto.UserDetailsDTO;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.model.User;
@@ -24,19 +25,37 @@ public class UserService {
     //methods
 
     //create a new user
-    public User createUser(User user){
-        return userRepository.save(user);
+    public UserResponseDTO createUser(UserRequestDTO user){
+
+        //from UserRquestDTO to User
+        User newUser = new User();
+        newUser.setName(user.getName());
+        User userSaved = userRepository.save(newUser);
+
+        //User to UserResponseDTO
+        return  toUserDTO(userSaved);
     }
 
     //Create a bunch of users
-    public List<User> createUsers(List<User> users){
-        return userRepository.saveAll(users);
+    public List<UserResponseDTO> createUsers(List<UserRequestDTO> requests){
+
+        //List<User> newUsers = new ArrayList<>();
+        List<UserResponseDTO> usersResponse = new ArrayList<>();
+        for(UserRequestDTO i:requests){
+            User user = new User();
+            user.setName(i.getName());
+            userRepository.save(user);
+
+            usersResponse.add(toUserDTO(user));
+        }
+
+        return usersResponse;
     }
 
     //Get all user
-    public List<UserDTO> getAllUsers(){
+    public List<UserResponseDTO> getAllUsers(){
         List<User> users = userRepository.findAll();
-        List<UserDTO> usersDTO = new ArrayList<>();
+        List<UserResponseDTO> usersDTO = new ArrayList<>();
         for(User i: users){
             usersDTO.add(toUserDTO(i));
         }
@@ -51,12 +70,14 @@ public class UserService {
     }
 
     //modify all from a user
-    public User putUser(User user, Long id){
+    public UserDetailsDTO putUser(UserRequestDTO dto, Long id){
 
         User existingUser = userRepository.findById(id).orElseThrow();
-        existingUser.setName(user.getName());
+        existingUser.setName(dto.getName());
 
-        return userRepository.save(existingUser);
+        User userSaved = userRepository.save(existingUser);
+
+        return toUserDetailsDTO(userSaved);
     }
 
     //Delete user
@@ -65,15 +86,15 @@ public class UserService {
     }
 
     //turn User into UserDTO
-    private UserDTO toUserDTO(User user){
-        UserDTO u = new UserDTO();
+    private UserResponseDTO toUserDTO(User user){
+        UserResponseDTO u = new UserResponseDTO();
         u.setUser_id(user.getId());
         u.setName(user.getName());
         return u;
     }
 
     private UserDetailsDTO toUserDetailsDTO(User user){
-        //User trae consigo List<User> que hay que convertir a List<TaskSummaryDTO>
+        //User trae consigo List<Task> que hay que convertir a List<TaskSummaryDTO>
         List<TaskSummaryDTO> taskSummaryDTOS = new ArrayList<>();
 
         for (Task i:user.getTasks()){
@@ -94,4 +115,5 @@ public class UserService {
                 task.getDescription()
         );
     }
+
 }

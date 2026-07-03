@@ -1,16 +1,16 @@
 package com.victorhugo.familyservicemanager.dto;
 
-public class UserDTO {
+public class UserResponseDTO {
 
     //field
     private Long user_id;
     private String name;
 
     //Empity Constructor
-    public UserDTO(){}
+    public UserResponseDTO(){}
 
     //Constructor
-    public UserDTO(Long user_id, String name){
+    public UserResponseDTO(Long user_id, String name){
         this.user_id = user_id;
         this.name = name;
     }
