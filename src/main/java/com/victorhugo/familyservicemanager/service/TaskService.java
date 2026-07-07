@@ -2,6 +2,7 @@ package com.victorhugo.familyservicemanager.service;
 
 
 import com.victorhugo.familyservicemanager.dto.*;
+import com.victorhugo.familyservicemanager.exception.TaskNotFoundException;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.model.User;
 import com.victorhugo.familyservicemanager.repository.TaskRepository;
@@ -43,7 +44,9 @@ public class TaskService {
 
     //Get a task with details
     public TaskDetailsDTO getTaskDetails(Long id){
-        Task existingTask = taskRepository.findById(id).orElseThrow();
+        Task existingTask = taskRepository
+                .findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
 
         TaskDetailsDTO taskDetailsDTO = new TaskDetailsDTO();
 

@@ -4,6 +4,7 @@ import com.victorhugo.familyservicemanager.dto.TaskSummaryDTO;
 import com.victorhugo.familyservicemanager.dto.UserRequestDTO;
 import com.victorhugo.familyservicemanager.dto.UserResponseDTO;
 import com.victorhugo.familyservicemanager.dto.UserDetailsDTO;
+import com.victorhugo.familyservicemanager.exception.UserNotFoundException;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.model.User;
 import com.victorhugo.familyservicemanager.repository.UserRepository;
@@ -64,7 +65,9 @@ public class UserService {
 
     //Get user Details
     public UserDetailsDTO getUserDetails(Long id){
-        User existingUser = userRepository.findById(id).orElseThrow();
+        User existingUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
         return toUserDetailsDTO(existingUser);
 
     }
