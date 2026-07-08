@@ -31,6 +31,11 @@ public class UserService {
         //from UserRquestDTO to User
         User newUser = new User();
         newUser.setName(user.getName());
+
+        if(newUser.getName() == null || newUser.getName().isEmpty()){
+            throw new IllegalArgumentException("Name is required");
+        }
+
         User userSaved = userRepository.save(newUser);
 
         //User to UserResponseDTO
