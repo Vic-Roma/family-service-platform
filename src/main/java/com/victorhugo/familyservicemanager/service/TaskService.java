@@ -3,6 +3,7 @@ package com.victorhugo.familyservicemanager.service;
 
 import com.victorhugo.familyservicemanager.dto.*;
 import com.victorhugo.familyservicemanager.exception.TaskNotFoundException;
+import com.victorhugo.familyservicemanager.exception.UserNotFoundException;
 import com.victorhugo.familyservicemanager.model.Task;
 import com.victorhugo.familyservicemanager.model.User;
 import com.victorhugo.familyservicemanager.repository.TaskRepository;
@@ -80,16 +81,54 @@ public class TaskService {
     }
 
     //Create a bunch of tasks
-    public List<Task> createTasks(List<Task> tasks){
-        return taskRepository.saveAll(tasks);
+    public List<TaskResponseDTO> createTasks(List<TaskRequestDTO> dtos){
+
+        List<Task> newTasks = new ArrayList<>();
+        List<TaskResponseDTO> taskResponseDTOS = new ArrayList<>();
+        for(TaskRequestDTO requestDTO:dtos){
+
+            Task task = new Task();
+
+            if (requestDTO.getUserId() != null){
+                User existingUser = userRepository
+                        .findById(requestDTO.getUserId())
+                        .orElseThrow(() -> new UserNotFoundException(requestDTO.getUserId()));
+
+                task.setUser(existingUser);
+            }
+
+            task.setDescription(requestDTO.getDescription());
+
+            newTasks.add(task);
+          //  taskRepository.save(task);
+
+        }
+
+        taskRepository.saveAll(newTasks);
+        for(Task task: newTasks){
+            taskResponseDTOS.add(toTaskResponseDTO(task));
+        }
+
+        return taskResponseDTOS;
     }
 
     //moodify all from a single record
-    public Task putTask(Long id, Task task){
-        Task existingTask = taskRepository.findById(id).orElseThrow();
-        existingTask.setDescription(task.getDescription());
+    public TaskResponseDTO putTask(Long id, TaskRequestDTO dto){
 
-        return taskRepository.save(existingTask);
+        Task existingTask = taskRepository
+                .findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
+
+        User exintingUser = userRepository
+                .findById(dto.getUserId())
+                .orElseThrow(() -> new UserNotFoundException(dto.getUserId()));
+
+        existingTask.setDescription(dto.getDescription());
+        existingTask.setUser(exintingUser);
+
+        Task savedTask = taskRepository.save(existingTask);
+
+        return toTaskResponseDTO(savedTask);
     }
 
     //delete a single task

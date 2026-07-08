@@ -1,7 +1,9 @@
 package com.victorhugo.familyservicemanager.controller;
 
-import com.victorhugo.familyservicemanager.dto.*;
-import com.victorhugo.familyservicemanager.model.Task;
+import com.victorhugo.familyservicemanager.dto.PatchTaskDTO;
+import com.victorhugo.familyservicemanager.dto.TaskDetailsDTO;
+import com.victorhugo.familyservicemanager.dto.TaskRequestDTO;
+import com.victorhugo.familyservicemanager.dto.TaskResponseDTO;
 import com.victorhugo.familyservicemanager.service.TaskService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -48,14 +50,16 @@ public class TaskController {
 
     //Create a bunch of tasks
     @PostMapping("/batch")
-    public List<Task> createTasks(@RequestBody List<Task> tasks){
-        return taskService.createTasks(tasks);
+    public List<TaskResponseDTO> createTasks(
+            @Valid
+            @RequestBody List<TaskRequestDTO> dto){
+        return taskService.createTasks(dto);
     }
 
     //modify data from a single task
     @PutMapping("/{id}")
-    public Task putTask(@PathVariable Long id, @RequestBody Task task){
-        return taskService.putTask(id,task);
+    public TaskResponseDTO putTask(@PathVariable Long id, @RequestBody TaskRequestDTO dto){
+        return taskService.putTask(id,dto);
     }
 
     @DeleteMapping("/{id}")
