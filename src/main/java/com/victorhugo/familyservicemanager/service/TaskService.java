@@ -70,7 +70,7 @@ public class TaskService {
         if(taskRequestDTO.getUserId() != null) {
             User existingUser = userRepository
                     .findById(taskRequestDTO.getUserId())
-                    .orElseThrow();
+                    .orElseThrow(() -> new UserNotFoundException(taskRequestDTO.getUserId()));
             newTask.setUser(existingUser);
         }
 
