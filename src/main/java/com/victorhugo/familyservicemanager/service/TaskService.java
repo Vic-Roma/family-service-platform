@@ -2,6 +2,7 @@ package com.victorhugo.familyservicemanager.service;
 
 
 import com.victorhugo.familyservicemanager.dto.*;
+import com.victorhugo.familyservicemanager.enums.TaskStatus;
 import com.victorhugo.familyservicemanager.exception.TaskNotFoundException;
 import com.victorhugo.familyservicemanager.exception.UserNotFoundException;
 import com.victorhugo.familyservicemanager.model.Task;
@@ -33,11 +34,7 @@ public class TaskService {
         List<TaskResponseDTO> taskResponseDTOS = new ArrayList<>();
         List<Task> tasks = taskRepository.findAll();
         for(Task t : tasks){
-            taskResponseDTOS.add(new TaskResponseDTO(
-                    t.getId(),
-                    t.getDescription(),
-                    t.getUser() != null ? t.getUser().getId() : null
-            ));
+            taskResponseDTOS.add(toTaskResponseDTO(t));
         }
 
         return taskResponseDTOS;
@@ -53,6 +50,7 @@ public class TaskService {
 
         taskDetailsDTO.setId(existingTask.getId());
         taskDetailsDTO.setDescription(existingTask.getDescription());
+        taskDetailsDTO.setStatus(existingTask.getStatus());
 
         if(existingTask.getUser() != null){
             //Convert user to UserSummaryDTO
@@ -60,6 +58,18 @@ public class TaskService {
             );
         }
         return taskDetailsDTO;
+    }
+
+    //Get Tasks by status
+    public List<TaskResponseDTO> tasksByStatus(TaskStatus status){
+        List<Task> existingTasks = taskRepository.findByStatus(status);
+        List<TaskResponseDTO> dtos = new ArrayList<>();
+
+        for(Task i:existingTasks){
+            dtos.add(toTaskResponseDTO(i));
+        }
+
+        return dtos;
     }
 
     //Create a new task
@@ -74,7 +84,7 @@ public class TaskService {
             newTask.setUser(existingUser);
         }
 
-        newTask.setDescription(taskRequestDTO.getDescription());
+        newTask.setDescription(taskRequestDTO.getDescription());;
         taskRepository.save(newTask);
 
         return toTaskResponseDTO(newTask);
@@ -166,7 +176,8 @@ public class TaskService {
         return new TaskResponseDTO(
                 existingTask.getId(),
                 existingTask.getDescription(),
-                existingTask.getUser() != null ? existingTask.getUser().getId() : null
+                existingTask.getUser() != null ? existingTask.getUser().getId() : null,
+                existingTask.getStatus()
         );
 
     }

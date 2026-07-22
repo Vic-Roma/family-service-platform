@@ -4,6 +4,7 @@ import com.victorhugo.familyservicemanager.dto.PatchTaskDTO;
 import com.victorhugo.familyservicemanager.dto.TaskDetailsDTO;
 import com.victorhugo.familyservicemanager.dto.TaskRequestDTO;
 import com.victorhugo.familyservicemanager.dto.TaskResponseDTO;
+import com.victorhugo.familyservicemanager.enums.TaskStatus;
 import com.victorhugo.familyservicemanager.service.TaskService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -38,6 +39,14 @@ public class TaskController {
             @Positive(message = "Id must be positive")
             @PathVariable Long id){
         return taskService.getTaskDetails(id);
+    }
+
+
+    //Get Tasks by status
+    @GetMapping("/status/{status}")
+    public List<TaskResponseDTO> tasksByStatus(
+            @PathVariable TaskStatus status){
+        return taskService.tasksByStatus(status);
     }
 
     //Create a single task

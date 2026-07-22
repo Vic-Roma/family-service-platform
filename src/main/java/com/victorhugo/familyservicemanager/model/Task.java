@@ -1,5 +1,6 @@
 package com.victorhugo.familyservicemanager.model;
 
+import com.victorhugo.familyservicemanager.enums.TaskStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskStatus status = TaskStatus.IN_PROGRESS;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,5 +51,11 @@ public class Task {
         this.description = description;
     }
 
+    public TaskStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 }

@@ -1,5 +1,6 @@
 package com.victorhugo.familyservicemanager.dto;
 
+import com.victorhugo.familyservicemanager.enums.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -12,11 +13,15 @@ public class TaskRequestDTO {
     private String description;
     private Long userId;
 
+    //@NotNull(message = "it cant be null victor")
+    private TaskStatus status;
+
     //Constructors
     public TaskRequestDTO(){}
     public TaskRequestDTO(String description, Long userId){
         this.description = description;
         this.userId = userId;
+
     }
 
     public String getDescription() {
@@ -33,5 +38,13 @@ public class TaskRequestDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 }
